@@ -13,7 +13,7 @@ Reason why not `os:cmd/1`:
 Examples with `erlsh:run/1,2,3,4`, `erlsh:oneliner/1,2`, `erlsh_path:escape/1`:
 
 ```erlang
-> erlsh:oneliner("uname -v").
+> erlsh:oneliner("uname -v"). % oneliner/1,2 funs do not include newlines
 {done,0,
       <<"Darwin Kernel Version 12.4.0: Wed May  1 17:57:12 PDT 2013; root:xnu-2050.24.15~1/RELEASE_X86_64">>}
 
