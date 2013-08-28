@@ -33,7 +33,7 @@ Examples with `erlsh:run/1,2,3,4`, `erlsh:oneliner/1,2`, `erlsh_path:escape/1`:
       <<"fatal: destination path 'darwinkit' already exists and is not an empty directory.\n">>}
 
 > Path = erlsh_path:escape("email+=/subdir@example.com").
-"email+=%47subdir@example.com"
+"email+=%2Fsubdir@example.com"
 
 > erlsh:oneliner(["touch", filename:join("/tmp/", Path)]).
 {done,0,<<>>}
