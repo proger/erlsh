@@ -2,6 +2,14 @@
 
 Family of functions involving interacting with the system shell and paths.
 
+Reason why not `os:cmd/1`:
+
+```erlang
+> Email = "hacker+/somepath&reboot@example.com". % this is a valid email!
+> os:cmd(["mkdir -p ", Email]).
+% path clobbering and a reboot may happen here!
+```
+
 Examples with `erlsh:run/1,2,3,4`, `erlsh:oneliner/1,2`, `erlsh_path:escape/1`:
 
 ```erlang
