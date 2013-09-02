@@ -1,6 +1,6 @@
 ## erlsh
 
-Family of functions involving interacting with the system shell and paths.
+Family of functions and ports involving interacting with the system shell, paths and external programs.
 
 Reason why not `os:cmd/1`:
 
@@ -61,4 +61,40 @@ p2p0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 2304
 	media: autoselect
 	status: inactive
 >>> {{2013,8,28},{8,39,14}} exit status: 0
+```
+
+### fdlink port
+
+Consider a case of spawning a port that does not actually read its standard input (e.g. `socat` that bridges `AF_UNIX` with `AF_INET`):
+
+``` shell
+# pstree -A -a $(pgrep make)
+make run
+  `-sh -c...
+      `-beam.smp -- -root /usr/lib/erlang -progname erl -- -home /root -- -pa ebin -config run/sys.config -eval[ok = application:
+          |-socat tcp-listen:32133,reuseaddr,bind=127.0.0.1 unix-connect:/var/run/docker.sock
+          `-16*[{beam.smp}]
+```
+
+If you terminate the node, `beam` will close the port but the process will still remain alive (thus, it will leak).
+
+To mitigate this issue, you can use `fdlink` that will track `stdin` availability for you:
+
+``` shell
+# pstree -A -a $(pgrep make)
+make run
+  `-sh -c...
+      `-beam.smp -- -root /usr/lib/erlang -progname erl -- -home /root -- -pa ebin -config run/sys.config -eval[ok = application:
+          |-fdlink /usr/bin/socat tcp-listen:32133,reuseaddr,bind=127.0.0.1 unix-connect:/var/run/docker.sock
+          |   `-socat tcp-listen:32133,reuseaddr,bind=127.0.0.1 unix-connect:/var/run/docker.sock
+          `-16*[{beam.smp}]
+```
+
+Using `fdlink` is easy:
+
+```erlang
+> Fdlink = erlsh:fdlink_executable().               % make sure your app dir is setup correctly
+> Fdlink = filename:join("./priv", "fdlink").       % in case you're running directly from erlsh root
+
+> erlang:open_port({spawn_executable, Fdlink}, [stream, exit_status, {args, ["/usr/bin/socat"|RestOfArgs]}).
 ```
