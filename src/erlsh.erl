@@ -1,5 +1,8 @@
 -module(erlsh).
--export([oneliner/1, oneliner/2, run/1, run/2, run/3, run/4]).
+-export([oneliner/1, oneliner/2, run/1, run/2, run/3, run/4, fdlink_executable/0]).
+
+fdlink_executable() ->
+    filename:join(code:priv_dir(erlsh), "fdlink").
 
 oneliner(C) ->
     run(C, ignoreeol, ".").
@@ -41,6 +44,10 @@ run(Command, Args, Log, Cwd) ->
     {done, Status, _} = sh_loop(Port, fun(Chunk, _Acc) -> file:write(File, Chunk), [] end, []),
     file:write(File, [">>> ", ts(), " exit status: ", integer_to_list(Status), "\n"]),
     {done, Status, Log}.
+
+%
+% private functions
+%
 
 sh_loop(Port, binary) ->
     sh_loop(Port, fun(Chunk, Acc) -> [Chunk|Acc] end, []).
