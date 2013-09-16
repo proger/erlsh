@@ -24,7 +24,6 @@ int
 main(int argc, char **argv)
 {
 	pid_t pid;
-	int fds[2];
 
 	if (argc < 2) {
 		fprintf(stderr, "usage: fdlink bin args...\n");
@@ -32,10 +31,9 @@ main(int argc, char **argv)
 	}
 
 	signal(SIGCHLD, sighandler);
-	safe(pipe(fds) != -1, "pipe");
 
 	if ((pid = fork()) == 0) {
-		dup2(fds[0], 0);
+		close(0);
 		safe(execv(argv[1], argv + 1) != -1, "fdlink execv");
 		/* NOTREACHED */
 	} else {

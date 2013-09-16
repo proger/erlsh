@@ -98,3 +98,5 @@ Using `fdlink` is easy:
 
 > erlang:open_port({spawn_executable, Fdlink}, [stream, exit_status, {args, ["/usr/bin/socat"|RestOfArgs]}).
 ```
+
+`fdlink` will also close the standard input of its child process.
