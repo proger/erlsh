@@ -17,7 +17,15 @@ run(C, Log) ->
     run(C, Log, ".").
 
 run([C|Args], Log, Cwd) when is_list(C) ->
-    run(os:find_executable(C), Args, Log, Cwd);
+    Executable = case filename:pathtype(C) of
+        absolute -> C;
+        relative -> case filename:split(C) of
+                [C] -> os:find_executable(C);
+                _ -> C % smth like deps/erlsh/priv/fdlink
+            end;
+        _ -> C
+    end,
+    run(Executable, Args, Log, Cwd);
 run(Command, Log, Cwd) when is_list(Command) ->
     run("/bin/sh", ["-c", Command], Log, Cwd).
 
