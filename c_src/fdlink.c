@@ -1,3 +1,7 @@
+/*
+ * fdlink spawns a process and links it to the availability of the inherited stdin (fd 0).
+ * If stdin is closed, the spawned process receives SIGHUP.
+ */
 #include <sys/select.h>
 #include <sys/types.h>
 #include <sys/wait.h>
