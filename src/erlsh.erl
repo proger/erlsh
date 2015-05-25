@@ -2,7 +2,7 @@
 -export([oneliner/1, oneliner/2, run/1, run/2, run/3, run/4, fdlink_executable/0]).
 
 fdlink_executable() ->
-    filename:join(code:priv_dir(erlsh), "fdlink").
+    filename:absname(filename:join(code:priv_dir(erlsh), "fdlink")).
 
 oneliner(C) ->
     run(C, ignoreeol, ".").
