@@ -1,7 +1,7 @@
 {application, erlsh,
  [
-  {description, ""},
-  {vsn, "1"},
+  {description, "Family of functions and ports involving interacting with the system shell, paths and external programs."},
+  {vsn, "0.1.0"},
   {registered, []},
   {applications, [
                   kernel,
