@@ -1,3 +1,7 @@
 /_build
 /doc
 /priv/fdlink
+.rebar3
+c_src/fdlink.d
+c_src/fdlink.o
+ebin
