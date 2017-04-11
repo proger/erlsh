@@ -78,5 +78,5 @@ sh_loop(Port, Fun, Acc, Flatten) when is_function(Fun) ->
 %t() -> dbg:tracer(), dbg:p(self(), m), dbg:p(new, m), run("false", "/tmp/1", "/tmp").
 
 ts() ->
-    Ts = {{_Y,_M,_D},{_H,_Min,_S}} = calendar:now_to_datetime(now()),
+    Ts = {{_Y,_M,_D},{_H,_Min,_S}} = calendar:now_to_datetime(os:timestamp()),
     io_lib:format("~p", [Ts]).
